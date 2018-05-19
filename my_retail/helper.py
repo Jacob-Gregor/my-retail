@@ -1,11 +1,7 @@
 import redis
-import ast
 
 class Helper(object):
     def __init__(self):
-        # Make self.url into environment variable
-        self.last_write_failed = False
-        # create seperate function for creating redis_py and make this funciton into get price or something
         self.redis_py = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     def product_exist(self, data):
@@ -30,7 +26,7 @@ class Helper(object):
         try:
             result = redis_py.hget('product', id)
             return result
-        except Exception:
+        except Exception as e:
             return 'something went wrong'
 
     def redis_update_pricing_info(self, redis_key, redis_field, name, values):
@@ -43,18 +39,17 @@ class Helper(object):
         Take in data, how we want to format the data, and the key to reference this set
         of data and write it to Redis
         """
-        # loops through list of datacenters and gives back each
-        # datacenter dict (longName, name, id)
 
         # check if total is a dict
         if not isinstance(values, dict):
             raise TypeError("'total' must be of type (dictionary)")
 
-        # remove unicode from values and set up data to go into redis
+        # remove unicode from currency dictionary
         new_value = {}
-        currency_dict= {}
+        currency_dict = {}
         currency_dict['currency_code'] = values['currency_code'].encode('ascii', 'ignore')
         currency_dict['value'] = values['value']
+        # add updated set of data to set in Redis
         new_value['name'] = name.encode('ascii', 'ignore')
         new_value['id'] = redis_field
         new_value['current_price'] = currency_dict
@@ -64,13 +59,18 @@ class Helper(object):
         except Exception as e:
             return 'Redis failed to set data: %s' % e
 
-    def format_data(self, this_id, data):
-        # Make url into own function
+    def format_data(self, product_id, data):
+        """
+       :param product_id: id of product
+       :param data: data from external api
+      
+       Format data that contains the pricing info from Redis and all other data from external api
+       """
         formatted_search = {}
-        formatted_search['id'] = this_id
-        formatted_search['current_price'] = self.redis_read_pricing_info(this_id)
+        formatted_search['id'] = product_id
+        formatted_search['current_price'] = self.redis_read_pricing_info(product_id)
         try:
             formatted_search['name'] = data['product']['item']['product_description']['title']
         except:
-            return 'Failed to get data from url'
+            return 'Failed to get data from external api'
         return formatted_search
