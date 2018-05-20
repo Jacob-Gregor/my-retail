@@ -59,6 +59,7 @@ class TestHelper(unittest.TestCase):
 
     @mock.patch('redis.StrictRedis.hget')
     def test_redis_read_pricing_info(self, mock_hget):
+        """Test happy path where hget is successful"""
         mock_hget.return_value = 5
         fake_helper = Helper()
         redis_result = fake_helper.redis_read_pricing_info(2)
@@ -66,27 +67,28 @@ class TestHelper(unittest.TestCase):
 
     @mock.patch('redis.StrictRedis.hget')
     def test_redis_read_pricing_return_error(self, mock_hget):
+        """Test that exceptions is raised if hget fails"""
         mock_hget.side_effect = Exception('test error')
         fake_helper = Helper()
         result = fake_helper.redis_read_pricing_info(2)
         self.assertEqual('Error reading from Redis: test error', result)
 
     def test_redis_update_pricing_info_values_is_not_dict(self):
-        """Test that assertion is raised redis connection fails"""
+        """Test that TypeError is raised if values is not a dictionary"""
         fake_helper = Helper()
         with self.assertRaises(TypeError):
             fake_helper.redis_update_pricing_info('value', 'value', 'value', 2)
 
     @mock.patch('redis.StrictRedis.hset')
     def test_redis_update_pricing_info_values_update_data(self, mock_hset):
-        """Test that assertion is raised redis connection fails"""
+        """Test happy path. No exceptions"""
         fake_helper = Helper()
         fake_helper.redis_update_pricing_info('value', 'value', 'value', FAKE_VALUES)
         mock_hset.assert_called()
 
     @mock.patch('redis.StrictRedis.hset')
     def test_redis_update_pricing_info_values_raise_exception(self, mock_hset):
-        """Test that assertion is raised redis connection fails"""
+        """Test exception is raised if hset fails"""
         fake_helper = Helper()
         with self.assertRaises(Exception):
             mock_hset.side_effect = Exception
@@ -94,7 +96,7 @@ class TestHelper(unittest.TestCase):
 
     @mock.patch('myretail_service.dev.helper.Helper.redis_read_pricing_info')
     def test_format_data(self, mock_read_redis):
-        """Test that assertion is raised redis connection fails"""
+        """Test that assertion is raised if redis connection fails"""
         fake_helper = Helper()
         mock_read_redis.return_value = FAKE_VALUES
         result = fake_helper.format_data(2, FAKE_DATA)

@@ -15,5 +15,5 @@ setup(
             'myretail_service=myretail_service.dev.main:main',
         ],
     },
-    install_requires=['flask', 'mock', 'urllib', 'redis']
+    install_requires=['flask', 'mock', 'urllib', 'redis', 'flake8']
 )
