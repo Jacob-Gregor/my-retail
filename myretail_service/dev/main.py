@@ -1,7 +1,9 @@
-from flask import Flask, jsonify, redirect, request
-from my_retail.helper import Helper
 import json
 import urllib
+
+from flask import Flask, jsonify, redirect, request
+
+from myretail_service.dev.helper import Helper
 
 app = Flask(__name__)
 
@@ -11,7 +13,7 @@ def index():
     return redirect('/products/'+str(0))
 
 
-@app.route('/products/<int:id>', methods=['GET','PUT'])
+@app.route('/products/<int:id>', methods=['GET', 'PUT'])
 def product(id):
     helper = Helper()
     url = "http://redsky.target.com/v2/pdp/tcin/" + str(
@@ -40,6 +42,6 @@ def product(id):
         # If we get into this logic branch, then id did not return anything from external api
         return 'Product does not exist.'
 
+
 if __name__ == "main":
     app.run(debug=True)
-
