@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
 
+
 setup(
     name='myretail_service',
     version='0.5.0',
@@ -15,5 +16,6 @@ setup(
             'myretail_service=myretail_service.dev.main:main',
         ],
     },
-    install_requires=['flask', 'mock', 'urllib', 'redis', 'flake8']
+    install_requires=['mock', 'redis', 'flake8', 'urllib3', 'tox', 'pytest-cov',
+                      'python-dotenv', 'flask', 'mock', 'pyyaml']
 )
