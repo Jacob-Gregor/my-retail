@@ -1,5 +1,6 @@
 import redis
 
+
 class Helper(object):
     def __init__(self):
         self.redis_py = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -21,13 +22,11 @@ class Helper(object):
 
         Read from Redis using id as the field in redis hget command
         """
-        #create seperate function for creating redis_py and make this funciton into get price or something
-        redis_py = redis.StrictRedis(host='localhost', port=6379, db=0)
         try:
-            result = redis_py.hget('product', id)
+            result = self.redis_py.hget('product', id)
             return result
         except Exception as e:
-            return 'something went wrong'
+            return 'Error reading from Redis: %s' % e
 
     def redis_update_pricing_info(self, redis_key, redis_field, name, values):
         """
@@ -55,22 +54,21 @@ class Helper(object):
         new_value['current_price'] = currency_dict
         try:
             self.redis_py.hset(redis_key, redis_field, new_value)
-            print str(redis_key) + ' ' + str(redis_field) + ' ' + str(values)
         except Exception as e:
-            return 'Redis failed to set data: %s' % e
+            raise 'Redis failed to set data: %s' % e
 
     def format_data(self, product_id, data):
         """
        :param product_id: id of product
        :param data: data from external api
-      
+
        Format data that contains the pricing info from Redis and all other data from external api
        """
         formatted_search = {}
         formatted_search['id'] = product_id
         formatted_search['current_price'] = self.redis_read_pricing_info(product_id)
-        try:
-            formatted_search['name'] = data['product']['item']['product_description']['title']
-        except:
-            return 'Failed to get data from external api'
+
+        # Since we already checked if data exists, we do not need to do another check here
+        formatted_search['name'] = data['product']['item']['product_description']['title']
+
         return formatted_search
