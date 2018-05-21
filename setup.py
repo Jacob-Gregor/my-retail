@@ -16,6 +16,5 @@ setup(
             'myretail_service=myretail_service.dev.main:main',
         ],
     },
-    install_requires=['mock', 'redis', 'flake8', 'urllib3', 'tox', 'pytest-cov',
-                      'python-dotenv', 'flask', 'mock', 'pyyaml']
+    install_requires=['mock', 'redis', 'flake8', 'tox', 'pytest-cov', 'flask']
 )
