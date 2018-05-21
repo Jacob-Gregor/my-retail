@@ -89,8 +89,8 @@ class TestDataManagement(unittest.TestCase):
         mock_redis_read.return_value = FAKE_VALUES
         mock_format.return_value = FORMATTED_RESULT
         mock_product_exist.return_value = False
-        thing = self.client.get('/products/13860428')
-        self.assertEqual('Product not found.', thing.data)
+        result = self.client.get('/products/13860428')
+        self.assertEqual('Product not found.', result.data)
 
     def test_index(self):
         # Test redirection occurs
