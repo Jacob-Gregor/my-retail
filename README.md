@@ -1,5 +1,5 @@
 # myRetail RESTful service
-Technical Assessment Case Studies
+Technical Assessment Case Study # 1
 
 Written in Python 2.7. Uses Flask for RESTful and Redis as a DB.
 
