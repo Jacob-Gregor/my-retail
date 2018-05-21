@@ -4,7 +4,7 @@ Technical Assessment Case Studies
 Written in Python 2.7. Uses Flask for RESTful and Redis as a DB.
 
 ## Requirements for Use
-  - This POC is expected to be ran with Python 2.7.
+  - This PoC is expected to be ran with Python 2.7.
   - The following is expected to be installed locally:
     - mock
     - flake8
@@ -22,9 +22,9 @@ Written in Python 2.7. Uses Flask for RESTful and Redis as a DB.
 2. All dependencies need to be installed. myretail-service/install_dependencies.sh can be used to download
 these dependencies (Note: install_dependencies.sh uses bash)
 
-3. You will need two terminals to run this POC.
+3. You will need two terminals to run this PoC.
   - One terminal will be needed to start a local redis server. To do this, just run the command `redis-server`
-  - The other terminal will run flask. For this POC we will be running flask locally. This can be accomplished two ways.
+  - The other terminal will run flask. For this PoC we will be running flask locally. This can be accomplished two ways.
     - First by simply running `./start-app.sh` in the /myretail-service directory
     - Second manually running flask.
       - First define FLASK-APP: `FLASK_APP='myretail_service/dev.main.py`
@@ -32,7 +32,7 @@ these dependencies (Note: install_dependencies.sh uses bash)
 
 ## Interaction
   - ### HTTP GET Request
-    There are two ways to interact with the POC.
+    There are two ways to interact with the PoC.
     - You can send a simple curl command: `curl localhost:8080/products/13860428`
     - Or you can browse the results through a web browser: `localhost:5000/products/13860428`
 

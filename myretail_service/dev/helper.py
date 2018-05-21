@@ -60,9 +60,9 @@ class Helper(object):
     def format_data(self, product_id, data):
         """
        :param product_id: id of product
-       :param data: data from external api
+       :param data: data from external API
 
-       Format data that contains the pricing info from Redis and all other data from external api
+       Format data that contains the pricing info from Redis and all other data from external API
        """
         formatted_search = {}
         formatted_search['id'] = product_id

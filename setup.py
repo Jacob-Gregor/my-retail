@@ -4,8 +4,8 @@ from setuptools import find_packages, setup
 setup(
     name='myretail_service',
     version='0.5.0',
-    description='',
-    long_description='',
+    description='Proof of Concept for a products API',
+    long_description='Proof of Concept for a products API',
     author='Jacob Gregor',
     author_email='gregorj9974@gmail.com',
     packages=find_packages(),
