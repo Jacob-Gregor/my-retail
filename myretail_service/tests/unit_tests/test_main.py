@@ -79,7 +79,7 @@ class TestDataManagement(unittest.TestCase):
         mock_product_exist.return_value = True
         response = self.client.put('/products/13860428', data=json.dumps(self.put_data),
                                    headers={'Content-Type': 'application/json'})
-        self.assertNotEqual('Product does not exist.', response.data)
+        self.assertNotEqual('Product not found.', response.data)
 
     @mock.patch('myretail_service.dev.helper.Helper.product_exist')
     @mock.patch('myretail_service.dev.helper.Helper.redis_read_pricing_info')
@@ -90,9 +90,9 @@ class TestDataManagement(unittest.TestCase):
         mock_format.return_value = FORMATTED_RESULT
         mock_product_exist.return_value = False
         thing = self.client.get('/products/13860428')
-        self.assertEqual('Product does not exist.', thing.data)
+        self.assertEqual('Product not found.', thing.data)
 
     def test_index(self):
         # Test redirection occurs
         response = self.client.get('/')
-        self.assertNotEqual('Product does not exist', response.data)
+        self.assertNotEqual('Product not found.', response.data)

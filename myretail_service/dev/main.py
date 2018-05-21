@@ -23,14 +23,14 @@ def product(id):
     data = json.loads(response.read())
 
     if request.method == 'GET' and helper.product_exist(data):
-        # Combine and format external api result and Redis pull if request method is GET and
-        # product exist in the external api
+        # Combine and format external API result and Redis pull if request method is GET and
+        # product exist in the external API
         formatted_search = helper.format_data(id, data)
         return jsonify(formatted_search)
 
     elif request.method == 'PUT' and helper.product_exist(data):
         # Update price information in Redis if request method is PUT and product exist in the
-        # external api
+        # external API
 
         req = request.get_json()
         helper.redis_update_pricing_info('product', id,
@@ -39,8 +39,8 @@ def product(id):
         return request.data
 
     else:
-        # If we get into this logic branch, then id did not return anything from external api
-        return 'Product does not exist.'
+        # If we get into this logic branch, then id did not return anything from external API
+        return 'Product not found.'
 
 
 if __name__ == "main":
