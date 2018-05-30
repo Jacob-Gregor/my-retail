@@ -26,6 +26,9 @@ FAKE_VALUES = {
     'currency_code': 'USD'
 }
 
+FAKE_REDIS_VALUES = (
+    "{ 'current_price': { 'value': 2, 'currency_code': 'USD' },'name': 'test', 'id': 1}")
+
 FAKE_DATA = {
     'product': {
         'item': {
@@ -44,6 +47,11 @@ FORMATTED_RESULT = {
     'name': 'test_title',
     'id': 2}
 
+FORMATTED_RESULT_DB_NOT_SET = {
+    'current_price': 'Not defined in DB',
+    'name': 'test_title',
+    'id': 2}
+
 
 class TestHelper(unittest.TestCase):
 
@@ -58,19 +66,19 @@ class TestHelper(unittest.TestCase):
         self.assertTrue(fake_helper.product_exist(FAKE_FOUND))
 
     @mock.patch('redis.StrictRedis.hget')
-    def test_redis_read_pricing_info(self, mock_hget):
+    def test_redis_read_product_info(self, mock_hget):
         """Test happy path where hget is successful"""
         mock_hget.return_value = 5
         fake_helper = Helper()
-        redis_result = fake_helper.redis_read_pricing_info(2)
+        redis_result = fake_helper.redis_read_product_info(2)
         self.assertEqual(5, redis_result)
 
     @mock.patch('redis.StrictRedis.hget')
-    def test_redis_read_pricing_return_error(self, mock_hget):
+    def test_redis_read_product_return_error(self, mock_hget):
         """Test that exceptions is raised if hget fails"""
         mock_hget.side_effect = Exception('test error')
         fake_helper = Helper()
-        result = fake_helper.redis_read_pricing_info(2)
+        result = fake_helper.redis_read_product_info(2)
         self.assertEqual('Error reading from Redis: test error', result)
 
     def test_redis_update_pricing_info_values_is_not_dict(self):
@@ -94,10 +102,18 @@ class TestHelper(unittest.TestCase):
             mock_hset.side_effect = Exception
             fake_helper.redis_update_pricing_info('value', 'value', 'value', FAKE_VALUES)
 
-    @mock.patch('myretail_service.dev.helper.Helper.redis_read_pricing_info')
-    def test_format_data(self, mock_read_redis):
+    @mock.patch('myretail_service.dev.helper.Helper.redis_read_product_info')
+    def test_format_data_redis_data_not_none(self, mock_read_redis):
         """Test that assertion is raised if redis connection fails"""
         fake_helper = Helper()
-        mock_read_redis.return_value = FAKE_VALUES
+        mock_read_redis.return_value = FAKE_REDIS_VALUES
         result = fake_helper.format_data(2, FAKE_DATA)
         self.assertEqual(FORMATTED_RESULT, result)
+
+    @mock.patch('myretail_service.dev.helper.Helper.redis_read_product_info')
+    def test_format_data_redis_data_none(self, mock_read_redis):
+        """Test that assertion is raised if redis connection fails"""
+        fake_helper = Helper()
+        mock_read_redis.return_value = None
+        result = fake_helper.format_data(2, FAKE_DATA)
+        self.assertEqual(FORMATTED_RESULT_DB_NOT_SET, result)

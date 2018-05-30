@@ -1,3 +1,4 @@
+import ast
 import redis
 
 
@@ -16,7 +17,7 @@ class Helper(object):
         else:
             return False
 
-    def redis_read_pricing_info(self, id):
+    def redis_read_product_info(self, id):
         """
         :param id: id provided by GET response
 
@@ -64,9 +65,16 @@ class Helper(object):
 
        Format data that contains the pricing info from Redis and all other data from external API
        """
+
         formatted_search = {}
+        current_price_info = "Not defined in DB"
+        redis_result = self.redis_read_product_info(product_id)
+        if redis_result is not None:
+            # Pull current price info from redis_result if not None
+            redis_dict = ast.literal_eval(redis_result)
+            current_price_info = redis_dict['current_price']
         formatted_search['id'] = product_id
-        formatted_search['current_price'] = self.redis_read_pricing_info(product_id)
+        formatted_search['current_price'] = current_price_info
 
         # Since we already checked if data exists, we do not need to do another check here
         formatted_search['name'] = data['product']['item']['product_description']['title']

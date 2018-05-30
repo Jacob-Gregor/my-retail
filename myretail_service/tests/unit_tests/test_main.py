@@ -60,7 +60,7 @@ class TestDataManagement(unittest.TestCase):
         }
 
     @mock.patch('myretail_service.dev.helper.Helper.product_exist')
-    @mock.patch('myretail_service.dev.helper.Helper.redis_read_pricing_info')
+    @mock.patch('myretail_service.dev.helper.Helper.redis_read_product_info')
     @mock.patch('myretail_service.dev.helper.Helper.format_data')
     def test_product_get(self, mock_format, mock_redis_read, mock_product_exist):
         # Test HTTP GET
@@ -82,7 +82,7 @@ class TestDataManagement(unittest.TestCase):
         self.assertNotEqual('Product not found.', response.data)
 
     @mock.patch('myretail_service.dev.helper.Helper.product_exist')
-    @mock.patch('myretail_service.dev.helper.Helper.redis_read_pricing_info')
+    @mock.patch('myretail_service.dev.helper.Helper.redis_read_product_info')
     @mock.patch('myretail_service.dev.helper.Helper.format_data')
     def test_product_else(self, mock_format, mock_redis_read, mock_product_exist):
         # Check that product returns general messsage if external api does not contain provided ID
